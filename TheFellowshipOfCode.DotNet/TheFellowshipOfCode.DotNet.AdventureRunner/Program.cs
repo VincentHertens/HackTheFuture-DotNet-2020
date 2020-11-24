@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using HTF2020.Contracts.Enums;
 using HTF2020.GameController.Builders;
 using HTF2020.GameController.State;
 using McMaster.Extensions.CommandLineUtils;
@@ -42,7 +43,7 @@ namespace TheFellowshipOfCode.DotNet.AdventureRunner
             GameState turn;
             do
             {
-                await Task.Delay(TimeBetweenTurns);
+                await Task.Delay(TimeBetweenTurns);               
                 turn = await runner.PlayTurn();
                 if (!OutputGame) continue;
                 Console.WriteLine(turn.TurnCounter);

@@ -14,11 +14,15 @@ namespace TheFellowshipOfCode.DotNet.YourAdventure
     {
         private readonly Random _random = new Random();
 
+        private WalkManager walkManager;
+        private TurnAction currentDirection = TurnAction.WalkSouth;
+
         public Task<Party> CreateParty(CreatePartyRequest request)
-        {
+        {           
+
             var party = new Party
             {
-                Name = "My Party",
+                Name = "DedSec",
                 Members = new List<PartyMember>()
             };
 
@@ -27,13 +31,12 @@ namespace TheFellowshipOfCode.DotNet.YourAdventure
                 party.Members.Add(new Fighter()
                 {
                     Id = i,
-                    Name = $"Member {i + 1}",
+                    Name = $"Hacker {i + 1}",
                     Constitution = 11,
                     Strength = 12,
                     Intelligence = 11
                 });
             }
-
             return Task.FromResult(party);
         }
 
@@ -43,8 +46,12 @@ namespace TheFellowshipOfCode.DotNet.YourAdventure
 
             Task<Turn> PlayToEnd()
             {
-                return Task.FromResult(request.PossibleActions.Contains(TurnAction.WalkSouth) ? new Turn(TurnAction.WalkSouth) : new Turn(request.PossibleActions[_random.Next(request.PossibleActions.Length)]));
-            }
+                walkManager = new WalkManager(request, currentDirection);                
+                Turn testTurn = walkManager.Walk();
+                currentDirection = walkManager.CurrentDirection;
+
+                return Task.FromResult(testTurn);               
+            }                       
 
             Task<Turn> Strategic()
             {
